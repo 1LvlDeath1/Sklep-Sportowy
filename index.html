@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="AERON — odzież sportowa stworzona do ruchu. Kolekcja SS 2026."
+        />
+        <meta name="theme-color" content="#0a0a0a" />
+        <title>AERON — Just Move</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="preload" as="image" href="images/hero.jpg" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <svg
+            id="svg-filters"
+            style="position: absolute; width: 0; height: 0; overflow: hidden"
+            aria-hidden="true"
+        >
+            <defs>
+                <filter id="logo-bg-remove" color-interpolation-filters="sRGB">
+                    <feColorMatrix
+                        type="matrix"
+                        values="1 0 0 0 0
+                                0 1 0 0 0
+                                0 0 1 0 0
+                                3 3 3 0 -1"
+                    />
+                </filter>
+            </defs>
+        </svg>
+
+        <canvas id="lightningCanvas"></canvas>
+        <div id="cursor"></div>
+        <div id="cursor-ring"></div>
+
+        <div class="toast" id="toast"></div>
+
+        <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+        <div class="cart-drawer" id="cartDrawer">
+            <div class="cart-header">
+                <h2>
+                    Koszyk
+                    <span
+                        style="color: var(--gray); font-size: 16px"
+                        id="cartItemCountHeader"
+                    ></span>
+                </h2>
+                <button
+                    class="cart-close"
+                    type="button"
+                    aria-label="Zamknij koszyk"
+                    onclick="toggleCart()"
+                >
+                    <svg viewBox="0 0 24 24" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer" id="cartFooter" style="display: none">
+                <div class="cart-total">
+                    <span>Razem</span>
+                    <span id="cartTotal">0 zł</span>
+                </div>
+                <button
+                    class="checkout-btn"
+                    type="button"
+                    onclick="showToast('Przechodzenie do kasy...')"
+                >
+                    Złóż zamówienie
+                </button>
+            </div>
+        </div>
+
+        <nav id="navbar">
+            <a href="#" class="nav-logo">
+                <img src="logo.png.jpg" alt="AERON" loading="eager" />
+            </a>
+            <ul class="nav-links">
+                <li><a href="#categories">Męskie</a></li>
+                <li><a href="#categories">Damskie</a></li>
+                <li><a href="#categories">Dziecięce</a></li>
+                <li><a href="#products">Nowości</a></li>
+                <li><a href="#story">O marce</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="search-wrap" id="searchWrap">
+                    <input
+                        type="text"
+                        class="search-input"
+                        id="searchInput"
+                        placeholder="Szukaj..."
+                    />
+                    <button
+                        class="search-btn"
+                        type="button"
+                        aria-label="Szukaj"
+                        onclick="toggleSearch()"
+                    >
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </button>
+                </div>
+                <button
+                    class="cart-btn"
+                    type="button"
+                    aria-label="Otwórz koszyk"
+                    onclick="toggleCart()"
+                >
+                    <svg viewBox="0 0 24 24" stroke-width="1.5">
+                        <path
+                            d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"
+                        />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </nav>
+
+        <section id="hero">
+            <div class="hero-video-placeholder">
+                <div class="speed-lines" id="speedLines"></div>
+                <div
+                    class="hero-circle"
+                    style="
+                        width: 600px;
+                        height: 600px;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    "
+                ></div>
+                <div
+                    class="hero-circle"
+                    style="
+                        width: 900px;
+                        height: 900px;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        animation-delay: -3s;
+                        opacity: 0.3;
+                    "
+                ></div>
+                <div
+                    class="hero-circle"
+                    style="
+                        width: 1200px;
+                        height: 1200px;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        animation-delay: -5s;
+                        opacity: 0.15;
+                    "
+                ></div>
+            </div>
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <div class="hero-eyebrow">Nowa kolekcja · SS 2026</div>
+                <h1 class="hero-title">
+                    JUST
+                    <span class="accent">MOVE</span>
+                </h1>
+                <p class="hero-sub">
+                    Stworzone do ruchu. Stworzone dla Ciebie.
+                </p>
+                <div class="hero-ctas">
+                    <button
+                        class="btn-primary"
+                        type="button"
+                        onclick="
+                            ripple(event);
+                            scrollToSection('products');
+                        "
+                    >
+                        Męskie
+                    </button>
+                    <button
+                        class="btn-secondary"
+                        type="button"
+                        onclick="
+                            ripple(event);
+                            scrollToSection('products');
+                        "
+                    >
+                        Damskie
+                    </button>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <div class="scroll-line"></div>
+                Przewiń
+            </div>
+        </section>
+
+        <section id="categories">
+            <div class="section-label reveal">Katalog</div>
+            <h2 class="section-title reveal reveal-delay-1">Znajdź swoje.</h2>
+            <div class="cat-grid">
+                <div
+                    class="cat-card reveal reveal-delay-1"
+                    onclick="showToast('Dział Męskie')"
+                >
+                    <div class="cat-bg cat-men"></div>
+                    <div class="cat-overlay"></div>
+                    <div class="cat-label">
+                        Męskie <span class="cat-count">186 produktów</span>
+                    </div>
+                    <div class="cat-arrow"></div>
+                </div>
+                <div
+                    class="cat-card reveal reveal-delay-2"
+                    onclick="showToast('Dział Damskie')"
+                >
+                    <div class="cat-bg cat-women"></div>
+                    <div class="cat-overlay"></div>
+                    <div class="cat-label">
+                        Damskie <span class="cat-count">214 produktów</span>
+                    </div>
+                    <div class="cat-arrow"></div>
+                </div>
+                <div
+                    class="cat-card reveal reveal-delay-3"
+                    onclick="showToast('Dział Dziecięce')"
+                >
+                    <div class="cat-bg cat-kids"></div>
+                    <div class="cat-overlay"></div>
+                    <div class="cat-label">
+                        Dziecięce <span class="cat-count">98 produktów</span>
+                    </div>
+                    <div class="cat-arrow"></div>
+                </div>
+                <div
+                    class="cat-card reveal reveal-delay-4"
+                    onclick="showToast('Dział Buty')"
+                >
+                    <div class="cat-bg cat-shoes"></div>
+                    <div class="cat-overlay"></div>
+                    <div class="cat-label">
+                        Buty <span class="cat-count">72 modele</span>
+                    </div>
+                    <div class="cat-arrow"></div>
+                </div>
+                <div
+                    class="cat-card reveal reveal-delay-4"
+                    onclick="showToast('Dział Nowości')"
+                >
+                    <div class="cat-bg cat-new"></div>
+                    <div class="cat-overlay"></div>
+                    <div class="cat-label">
+                        Nowości <span class="cat-count">W tym tygodniu</span>
+                    </div>
+                    <div class="cat-arrow"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products">
+            <div class="products-header">
+                <div>
+                    <div class="section-label reveal">Polecamy</div>
+                    <h2 class="section-title reveal reveal-delay-1">
+                        Hity sezonu.
+                    </h2>
+                </div>
+                <button
+                    class="btn-secondary btn-secondary--sm reveal"
+                    type="button"
+                    onclick="showToast('Wszystkie produkty')"
+                >
+                    Zobacz wszystkie →
+                </button>
+            </div>
+            <div class="products-scroll" id="productsScroll"></div>
+        </section>
+
+        <section id="story">
+            <div class="story-inner">
+                <div class="story-visual">
+                    <div class="story-stats">
+                        <div class="stat-item">
+                            <div class="stat-num">12+</div>
+                            <div class="stat-label">Lat doświadczenia</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-num">48</div>
+                            <div class="stat-label">Krajów</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-num">2M+</div>
+                            <div class="stat-label">Atletów</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-text">
+                    <div class="section-label reveal">Nasz manifest</div>
+                    <h2 class="section-title reveal reveal-delay-1">
+                        Ruch — <br />to życie.
+                    </h2>
+                    <p class="story-body reveal reveal-delay-2">
+                        AERON narodził się z jednej idei: każdy człowiek jest
+                        atletą. Nieważne, czy biegniesz maraton, czy po raz
+                        pierwszy zakładasz buty sportowe. Tworzymy ubrania,
+                        które nie przeszkadzają — one poruszają się razem z
+                        Tobą.
+                    </p>
+                    <button
+                        class="btn-primary btn-inline reveal reveal-delay-3"
+                        type="button"
+                        onclick="
+                            ripple(event);
+                            showToast('O marce AERON');
+                        "
+                    >
+                        Nasza historia
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="collection">
+            <div class="collection-bg"></div>
+            <div class="collection-overlay"></div>
+            <div class="collection-content">
+                <div class="section-label reveal">Limitowana kolekcja</div>
+                <h2 class="section-title reveal reveal-delay-1">
+                    AERON<br />VELOCITY<br />DROP.
+                </h2>
+                <p class="collection-sub reveal reveal-delay-2">
+                    Stworzone dla tych, którzy się nie zatrzymują. 50 sztuk.
+                    Jedna szansa.
+                </p>
+                <button
+                    class="btn-primary reveal reveal-delay-3"
+                    type="button"
+                    onclick="
+                        ripple(event);
+                        showToast('Velocity Drop — już wkrótce!');
+                    "
+                >
+                    Otrzymaj powiadomienie
+                </button>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">
+                        <img src="logo.png.jpg" alt="AERON" loading="lazy" />
+                    </a>
+                    <p class="footer-tagline">Just Move.</p>
+                    <div class="footer-socials">
+                        <a href="#" class="social-link">IG</a>
+                        <a href="#" class="social-link">TW</a>
+                        <a href="#" class="social-link">TT</a>
+                        <a href="#" class="social-link">YT</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Sklep</h4>
+                    <ul>
+                        <li><a href="#">Męskie</a></li>
+                        <li><a href="#">Damskie</a></li>
+                        <li><a href="#">Dziecięce</a></li>
+                        <li><a href="#">Buty</a></li>
+                        <li><a href="#">Akcesoria</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Pomoc</h4>
+                    <ul>
+                        <li><a href="#">Dostawa</a></li>
+                        <li><a href="#">Zwroty</a></li>
+                        <li><a href="#">Rozmiarówka</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Firma</h4>
+                    <ul>
+                        <li><a href="#">O nas</a></li>
+                        <li><a href="#">Kariera</a></li>
+                        <li><a href="#">Prasa</a></li>
+                        <li><a href="#">Zrównoważony rozwój</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li><a href="#">hello@aeron.com</a></li>
+                        <li><a href="#">+48 22 000 0000</a></li>
+                        <li><a href="#">Warszawa, Polska</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 AERON. Wszelkie prawa zastrzeżone.</span>
+                <span>Polityka prywatności · Warunki użytkowania</span>
+            </div>
+        </footer>
+
+        <script src="script.js"></script>
+    </body>
+</html>
