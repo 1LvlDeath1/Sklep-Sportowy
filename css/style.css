@@ -22,6 +22,8 @@ html {
     scroll-behavior: smooth;
     scroll-padding-top: 140px;
     font-size: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--volt) var(--black);
 }
 
 body {
@@ -29,37 +31,6 @@ body {
     color: var(--white);
     font-family: var(--font-body);
     overflow-x: hidden;
-    cursor: none;
-}
-
-#cursor {
-    width: 12px;
-    height: 12px;
-    background: var(--volt);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transition:
-        transform 0.15s ease,
-        background 0.2s;
-    mix-blend-mode: difference;
-}
-#cursor-ring {
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(200, 240, 46, 0.5);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition:
-        left 0.3s ease,
-        top 0.3s ease;
-}
-body:has(a:hover) #cursor,
-body:has(button:hover) #cursor {
-    transform: scale(2.5);
 }
 
 ::-webkit-scrollbar {
@@ -513,7 +484,7 @@ nav.scrolled {
             rgba(10, 10, 10, 0.35) 50%,
             rgba(10, 10, 10, 0.6) 100%
         ),
-        url("images/hero.jpg") center/cover no-repeat;
+        url("../images/hero.jpg") center/cover no-repeat;
     overflow: hidden;
 }
 .speed-lines {
@@ -554,6 +525,25 @@ nav.scrolled {
     border-radius: 50%;
     border: 1px solid rgba(200, 240, 46, 0.08);
     animation: pulseCircle 8s ease-in-out infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.hero-circle:nth-child(2) {
+    width: 600px;
+    height: 600px;
+}
+.hero-circle:nth-child(3) {
+    width: 900px;
+    height: 900px;
+    animation-delay: -3s;
+    opacity: 0.3;
+}
+.hero-circle:nth-child(4) {
+    width: 1200px;
+    height: 1200px;
+    animation-delay: -5s;
+    opacity: 0.15;
 }
 @keyframes pulseCircle {
     0%,
@@ -773,6 +763,21 @@ section {
     background-size: cover;
     background-position: center;
 }
+.cat-men {
+    background-image: url("../images/cat-men.jpg");
+}
+.cat-women {
+    background-image: url("../images/cat-women.jpg");
+}
+.cat-kids {
+    background-image: url("../images/cat-kids.jpg");
+}
+.cat-shoes {
+    background-image: url("../images/cat-shoes.jpg");
+}
+.cat-new {
+    background-image: url("../images/cat-new.jpg");
+}
 .cat-card:hover .cat-bg {
     transform: scale(1.06);
 }
@@ -826,21 +831,6 @@ section {
     font-size: 14px;
 }
 
-.cat-men {
-    background-image: url("images/cat-men.jpg");
-}
-.cat-women {
-    background-image: url("images/cat-women.jpg");
-}
-.cat-kids {
-    background-image: url("images/cat-kids.jpg");
-}
-.cat-shoes {
-    background-image: url("images/cat-shoes.jpg");
-}
-.cat-new {
-    background-image: url("images/cat-new.jpg");
-}
 
 #products {
     padding: 80px 0 80px 40px;
@@ -983,7 +973,7 @@ section {
             rgba(10, 10, 10, 0.55) 0%,
             rgba(10, 10, 10, 0.3) 100%
         ),
-        url("images/story.jpg") center/cover no-repeat;
+        url("../images/story.jpg") center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1039,34 +1029,42 @@ section {
 
 #collection {
     padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+}
+.collection-visual {
     position: relative;
-    height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
 }
-.collection-bg {
+.collection-visual::after {
+    content: "";
     position: absolute;
-    inset: 0;
-    background: url("images/collection.jpg") center/cover no-repeat;
-    opacity: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 140px;
+    background: linear-gradient(to left, transparent, var(--black));
+    pointer-events: none;
+    z-index: 1;
 }
-.collection-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        90deg,
-        rgba(10, 10, 10, 0.9) 0%,
-        rgba(10, 10, 10, 0.3) 50%,
-        rgba(10, 10, 10, 0.5) 100%
-    );
+.collection-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
 }
 .collection-content {
     position: relative;
     z-index: 2;
-    max-width: 600px;
-    padding: 0 40px;
+    width: 100%;
+    max-width: none;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--black);
 }
 .collection-content .section-label {
     margin-bottom: 24px;
@@ -1246,6 +1244,9 @@ footer {
     .story-inner {
         grid-template-columns: 1fr;
     }
+    .story-visual {
+        min-height: 50vh;
+    }
     .story-text {
         padding: 60px 20px;
     }
@@ -1258,6 +1259,16 @@ footer {
     }
     #hero {
         padding-top: 90px;
+    }
+    #collection {
+        grid-template-columns: 1fr;
+        min-height: unset;
+    }
+    .collection-visual {
+        min-height: 70vw;
+    }
+    .collection-content {
+        padding: 60px 20px;
     }
 }
 
